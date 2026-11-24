@@ -1,0 +1,28 @@
+# CI for ComfyUI Creative Studio. Active when this directory is the repository root
+# (e.g. after `git subtree split --prefix comfyui-creative-studio`).
+name: ci
+on: [push, pull_request]
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r backend/requirements-dev.txt
+      - run: cd backend && pytest -q
+  custom-nodes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pytest pillow numpy && pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: cd custom_nodes/comfyui-creative-studio-nodes && pytest tests -q
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: frontend/package-lock.json }
+      - run: cd frontend && npm ci && npm run typecheck && npm test && npm run build

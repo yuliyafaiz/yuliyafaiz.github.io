@@ -309,3 +309,4 @@ pre.code { background: var(--bg-elev); border: 1px solid var(--border); border-r
 .skeleton { background: linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: var(--radius); }
 @keyframes shimmer { to { background-position: -200% 0; } }
 .hero { background: radial-gradient(1200px 300px at 80% -10%, rgba(217, 184, 112, 0.14), transparent 60%), var(--surface); }
+.row > svg, .callout > svg { flex: none; }
