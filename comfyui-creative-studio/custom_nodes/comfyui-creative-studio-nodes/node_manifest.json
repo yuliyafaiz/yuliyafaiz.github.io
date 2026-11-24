@@ -1,0 +1,414 @@
+{
+  "package": "comfyui-creative-studio-nodes",
+  "version": "0.1.0",
+  "nodes": [
+    {
+      "name": "CS_ReferenceCollector",
+      "display_name": "Reference Collector (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Batch differently sized reference images with labels and a manifest.",
+      "inputs": [
+        {
+          "name": "resize_mode",
+          "type": "COMBO",
+          "options": [
+            "pad",
+            "crop",
+            "stretch"
+          ],
+          "tooltip": "How references of different sizes are brought to one size"
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "tooltip": "0 = width of the first image"
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "tooltip": "0 = height of the first image"
+        },
+        {
+          "name": "labels",
+          "type": "STRING",
+          "tooltip": "Comma-separated labels, one per connected input"
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "tooltip": "Reference image 1"
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "tooltip": "Reference image 2"
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "tooltip": "Reference image 3"
+        },
+        {
+          "name": "image_4",
+          "type": "IMAGE",
+          "tooltip": "Reference image 4"
+        },
+        {
+          "name": "image_5",
+          "type": "IMAGE",
+          "tooltip": "Reference image 5"
+        },
+        {
+          "name": "image_6",
+          "type": "IMAGE",
+          "tooltip": "Reference image 6"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE"
+        },
+        {
+          "name": "pad_mask",
+          "type": "MASK"
+        },
+        {
+          "name": "references",
+          "type": "CS_REFERENCES"
+        },
+        {
+          "name": "count",
+          "type": "INT"
+        }
+      ],
+      "output_node": false
+    },
+    {
+      "name": "CS_ProductProfileLoader",
+      "display_name": "Product Profile Loader (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Product reference images + mask + deterministic prompt fragments from a Creative Studio profile.",
+      "inputs": [
+        {
+          "name": "profile_json",
+          "type": "STRING",
+          "tooltip": "Profile exported from Creative Studio (filled automatically when the job is submitted from the app)"
+        },
+        {
+          "name": "max_side",
+          "type": "INT",
+          "tooltip": "Downscale references so the longest side is at most this (0 = off)"
+        },
+        {
+          "name": "resize_mode",
+          "type": "COMBO",
+          "options": [
+            "pad",
+            "crop",
+            "stretch"
+          ],
+          "tooltip": null
+        }
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        {
+          "name": "product_images",
+          "type": "IMAGE"
+        },
+        {
+          "name": "background_mask",
+          "type": "MASK"
+        },
+        {
+          "name": "detail_images",
+          "type": "IMAGE"
+        },
+        {
+          "name": "positive_fragment",
+          "type": "STRING"
+        },
+        {
+          "name": "negative_fragment",
+          "type": "STRING"
+        },
+        {
+          "name": "profile",
+          "type": "CS_PROFILE"
+        }
+      ],
+      "output_node": false
+    },
+    {
+      "name": "CS_CharacterProfileLoader",
+      "display_name": "Character Profile Loader (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Character face/look references + prompt fragments from a Creative Studio profile.",
+      "inputs": [
+        {
+          "name": "profile_json",
+          "type": "STRING",
+          "tooltip": "Profile exported from Creative Studio (filled automatically when the job is submitted from the app)"
+        },
+        {
+          "name": "max_side",
+          "type": "INT",
+          "tooltip": "Downscale references so the longest side is at most this (0 = off)"
+        },
+        {
+          "name": "resize_mode",
+          "type": "COMBO",
+          "options": [
+            "pad",
+            "crop",
+            "stretch"
+          ],
+          "tooltip": null
+        }
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        {
+          "name": "face_images",
+          "type": "IMAGE"
+        },
+        {
+          "name": "reference_images",
+          "type": "IMAGE"
+        },
+        {
+          "name": "positive_fragment",
+          "type": "STRING"
+        },
+        {
+          "name": "negative_fragment",
+          "type": "STRING"
+        },
+        {
+          "name": "profile",
+          "type": "CS_PROFILE"
+        }
+      ],
+      "output_node": false
+    },
+    {
+      "name": "CS_PromptTemplate",
+      "display_name": "Prompt Template (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Reusable prompt templates with validated variables from profiles, variants and projects.",
+      "inputs": [
+        {
+          "name": "template",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "variables",
+          "type": "STRING",
+          "tooltip": "key: value per line, or a JSON object"
+        },
+        {
+          "name": "strict",
+          "type": "BOOLEAN",
+          "tooltip": null
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "profile",
+          "type": "CS_PROFILE",
+          "tooltip": null
+        },
+        {
+          "name": "variant",
+          "type": "CS_VARIANT",
+          "tooltip": null
+        },
+        {
+          "name": "project",
+          "type": "CS_PROJECT",
+          "tooltip": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING"
+        },
+        {
+          "name": "resolution_json",
+          "type": "STRING"
+        }
+      ],
+      "output_node": false
+    },
+    {
+      "name": "CS_GenerationMetadataSaver",
+      "display_name": "Generation Metadata Saver (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Save PNGs with embedded workflow plus a sidecar JSON of reproducibility metadata and model hashes.",
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "tooltip": null
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "hash_models",
+          "type": "BOOLEAN",
+          "tooltip": "SHA-256 model files (first run per model can take a while)"
+        },
+        {
+          "name": "notes",
+          "type": "STRING",
+          "tooltip": null
+        }
+      ],
+      "optional_inputs": [
+        {
+          "name": "project",
+          "type": "CS_PROJECT",
+          "tooltip": null
+        },
+        {
+          "name": "profile",
+          "type": "CS_PROFILE",
+          "tooltip": null
+        },
+        {
+          "name": "variant",
+          "type": "CS_VARIANT",
+          "tooltip": null
+        },
+        {
+          "name": "references",
+          "type": "CS_REFERENCES",
+          "tooltip": null
+        },
+        {
+          "name": "positive",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "negative",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "seed",
+          "type": "INT",
+          "tooltip": null
+        }
+      ],
+      "outputs": [],
+      "output_node": true
+    },
+    {
+      "name": "CS_BatchVariantManager",
+      "display_name": "Batch Variant Manager (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Structured, reproducible batch variations (text + seed) with metadata.",
+      "inputs": [
+        {
+          "name": "variants",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "variant_index",
+          "type": "INT",
+          "tooltip": null
+        },
+        {
+          "name": "base_seed",
+          "type": "INT",
+          "tooltip": null
+        },
+        {
+          "name": "seed_strategy",
+          "type": "COMBO",
+          "options": [
+            "increment",
+            "hash",
+            "fixed"
+          ],
+          "tooltip": null
+        }
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        {
+          "name": "seed",
+          "type": "INT"
+        },
+        {
+          "name": "variant_text",
+          "type": "STRING"
+        },
+        {
+          "name": "label",
+          "type": "STRING"
+        },
+        {
+          "name": "variant",
+          "type": "CS_VARIANT"
+        }
+      ],
+      "output_node": false
+    },
+    {
+      "name": "CS_ProjectMetadata",
+      "display_name": "Project Metadata (Creative Studio)",
+      "category": "Creative Studio",
+      "description": "Project/campaign identifiers for metadata and output folder organisation.",
+      "inputs": [
+        {
+          "name": "project_id",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "project_name",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "campaign",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "job_id",
+          "type": "STRING",
+          "tooltip": null
+        },
+        {
+          "name": "tags",
+          "type": "STRING",
+          "tooltip": "comma separated"
+        }
+      ],
+      "optional_inputs": [],
+      "outputs": [
+        {
+          "name": "project",
+          "type": "CS_PROJECT"
+        },
+        {
+          "name": "filename_prefix",
+          "type": "STRING"
+        }
+      ],
+      "output_node": false
+    }
+  ]
+}

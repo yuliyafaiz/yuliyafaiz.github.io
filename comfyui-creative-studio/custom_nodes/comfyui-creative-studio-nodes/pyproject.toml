@@ -1,0 +1,15 @@
+[project]
+name = "comfyui-creative-studio-nodes"
+description = "Reference, profile, prompt-template, batch-variant and metadata nodes for ComfyUI Creative Studio."
+version = "0.1.0"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/yuliyafaiz/yuliyafaiz.github.io/tree/main/comfyui-creative-studio/custom_nodes/comfyui-creative-studio-nodes"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI Creative Studio Nodes"
+Icon = ""
